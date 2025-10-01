@@ -1,3 +1,4 @@
+// swagger.js
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
@@ -15,8 +16,8 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:8000",
-        description: "Servidor de Desenvolvimento"
+        url: "/", // URL relativa - vai usar a mesma URL da sua API
+        description: "Servidor atual"
       }
     ],
     components: {
@@ -82,14 +83,25 @@ const options = {
       }
     }
   },
-  apis: ["./src/routes/*.js"] // Caminho para os arquivos de rotas
+  apis: ["./src/routes/*.js"]
 };
 
 const swaggerSpec = swaggerJSDoc(options);
 
 const swaggerDocs = (app) => {
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-  console.log("📚 Swagger docs available at http://localhost:8000/api-docs");
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    swaggerOptions: {
+      url: "/api-docs.json" // Endpoint para o JSON do Swagger
+    }
+  }));
+  
+  // Endpoint para o JSON do Swagger
+  app.get("/api-docs.json", (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    res.send(swaggerSpec);
+  });
+  
+  console.log("📚 Swagger docs available at /api-docs");
 };
 
 export default swaggerDocs;

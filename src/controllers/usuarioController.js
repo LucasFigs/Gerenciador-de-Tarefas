@@ -15,18 +15,22 @@ export const usuarioController = {
     },
     async buscarPorId(req, res) {
         const user = await usuarioService.buscarPorId(req.params.id);
-        user.length > 0 ? res.send(user[0]) : res.send("Usuário não encontrado");
+        user.length > 0 ? res.send(user[0]) : res.status(404).send("Usuário não encontrado");
     },
     async criar(req, res) {
-        const result = await usuarioService.criar(req.body.nome, req.body.email, req.body.senha);
-        result.affectedRows > 0 ? res.send("Usuário cadastrado com sucesso!") : res.send("Erro ao cadastrar");
+        try {
+            const result = await usuarioService.criar(req.body.nome, req.body.email, req.body.senha);
+            result.length > 0 ? res.send("Usuário cadastrado com sucesso!") : res.status(400).send("Erro ao cadastrar");
+        } catch (error) {
+            res.status(400).send("Erro ao cadastrar usuário");
+        }
     },
     async atualizar(req, res) {
         const result = await usuarioService.atualizar(req.params.id, req.body.nome, req.body.email, req.body.senha);
-        result.affectedRows > 0 ? res.send("Usuário atualizado com sucesso!") : res.send("Erro ao atualizar");
+        result.length > 0 ? res.send("Usuário atualizado com sucesso!") : res.status(400).send("Erro ao atualizar");
     },
     async deletar(req, res) {
         const result = await usuarioService.deletar(req.params.id);
-        result.affectedRows > 0 ? res.send("Usuário deletado com sucesso!") : res.send("Erro ao deletar");
+        result.length > 0 ? res.send("Usuário deletado com sucesso!") : res.status(400).send("Erro ao deletar");
     }
 };

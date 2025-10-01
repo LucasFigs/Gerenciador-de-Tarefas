@@ -1,11 +1,12 @@
-import mysql from "mysql2/promise";
+// db.js
+import pkg from 'pg';
+const { Pool } = pkg;
+
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
 
 export async function getConnection() {
-  return await mysql.createConnection({
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "",
-    port: process.env.DB_PORT || "3306",
-    database: process.env.DB_NAME || "Tarefas_DB"
-  });
+  return await pool.connect();
 }

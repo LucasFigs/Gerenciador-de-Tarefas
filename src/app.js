@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
 import tarefaRoutes from "./routes/tarefaRoutes.js";
-import swaggerDocs from "./config/swagger.js";
+import swaggerDocs from "./swagger.js";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
