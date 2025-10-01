@@ -1,53 +1,51 @@
-// tarefaController.js
 import { tarefaService } from "../services/tarefaService.js";
 
 export const tarefaController = {
     async listar(req, res) {
-        try {
-            const tarefas = await tarefaService.listar();
-            res.send(tarefas);
-        } catch (error) {
-            res.status(500).send("Erro ao listar tarefas");
-        }
+        res.json(await tarefaService.listar());
     },
     async buscarPorId(req, res) {
-        try {
-            const tarefa = await tarefaService.buscarPorId(req.params.id);
-            tarefa.length > 0 ? res.send(tarefa[0]) : res.status(404).send("Tarefa não encontrada");
-        } catch (error) {
-            res.status(500).send("Erro ao buscar tarefa");
-        }
+        const tarefa = await tarefaService.buscarPorId(req.params.id);
+        tarefa.length > 0 ? res.json(tarefa[0]) : res.status(404).json({ 
+            success: false, 
+            message: "Tarefa não encontrada" 
+        });
     },
     async listarPorUsuario(req, res) {
-        try {
-            const tarefas = await tarefaService.listarPorUsuario(req.params.id_usuario);
-            tarefas.length > 0 ? res.send(tarefas) : res.status(404).send("Nenhuma tarefa encontrada para este usuário");
-        } catch (error) {
-            res.status(500).send("Erro ao listar tarefas do usuário");
-        }
+        const tarefas = await tarefaService.listarPorUsuario(req.params.id_usuario);
+        tarefas.length > 0 ? res.json(tarefas) : res.status(404).json({ 
+            success: false, 
+            message: "Nenhuma tarefa encontrada para este usuário" 
+        });
     },
     async criar(req, res) {
-        try {
-            const result = await tarefaService.criar(req.body.titulo, req.body.descricao, req.body.id_usuario);
-            result.length > 0 ? res.send("Tarefa cadastrada com sucesso!") : res.status(400).send("Erro ao cadastrar");
-        } catch (error) {
-            res.status(400).send("Erro ao cadastrar tarefa");
-        }
+        const result = await tarefaService.criar(req.body.titulo, req.body.descricao, req.body.id_usuario);
+        result.affectedRows > 0 ? res.json({ 
+            success: true, 
+            message: "Tarefa cadastrada com sucesso!" 
+        }) : res.status(400).json({ 
+            success: false, 
+            message: "Erro ao cadastrar" 
+        });
     },
     async atualizar(req, res) {
-        try {
-            const result = await tarefaService.atualizar(req.params.id, req.body.titulo, req.body.descricao, req.body.id_usuario);
-            result.length > 0 ? res.send("Tarefa atualizada com sucesso!") : res.status(400).send("Erro ao atualizar");
-        } catch (error) {
-            res.status(400).send("Erro ao atualizar tarefa");
-        }
+        const result = await tarefaService.atualizar(req.params.id, req.body.titulo, req.body.descricao, req.body.id_usuario);
+        result.affectedRows > 0 ? res.json({ 
+            success: true, 
+            message: "Tarefa atualizada com sucesso!" 
+        }) : res.status(400).json({ 
+            success: false, 
+            message: "Erro ao atualizar" 
+        });
     },
     async deletar(req, res) {
-        try {
-            const result = await tarefaService.deletar(req.params.id);
-            result.length > 0 ? res.send("Tarefa excluída com sucesso!") : res.status(400).send("Erro ao excluir");
-        } catch (error) {
-            res.status(400).send("Erro ao excluir tarefa");
-        }
+        const result = await tarefaService.deletar(req.params.id);
+        result.affectedRows > 0 ? res.json({ 
+            success: true, 
+            message: "Tarefa excluída com sucesso!" 
+        }) : res.status(400).json({ 
+            success: false, 
+            message: "Erro ao excluir" 
+        });
     }
 };
