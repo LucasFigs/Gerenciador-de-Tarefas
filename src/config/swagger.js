@@ -83,7 +83,7 @@ const options = {
       }
     }
   },
-  apis: ["./src/routes/*.js"]
+apis: ["./src/routes/*.js"] // Tenta ambos os caminhos
 };
 
 const swaggerSpec = swaggerJSDoc(options);
