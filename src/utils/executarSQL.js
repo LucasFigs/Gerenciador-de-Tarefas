@@ -1,12 +1,17 @@
-// executarSQL.js
-import { pool } from "../config/db.js";
+import { getConnection } from "../config/db.js";
 
-export async function executarSQL(query, params = []) {
-  const client = await pool.connect();
+export async function executarSQL(query) {
+  let conn;
   try {
-    const result = await client.query(query, params);
-    return result.rows;
+    conn = await getConnection();
+    const [result] = await conn.query(query);
+    return result;
+  } catch (error) {
+    console.error("Erro ao executar SQL:", error);
+    throw error;
   } finally {
-    client.release();
+    if (conn) {
+      await conn.end();
+    }
   }
 }
