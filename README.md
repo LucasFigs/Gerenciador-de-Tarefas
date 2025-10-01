@@ -248,7 +248,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para de
 
 ## 👨‍💻 Autor
 
-**Lucas Figs**
+**Lucas / Cauã / Marcio**
 - GitHub: [@LucasFigs](https://github.com/LucasFigs)
 - GitHub: [@cauamilfont](https://github.com/cauamilfont)
 - GitHub: [@marciiojr](https://github.com/marciiojr)
