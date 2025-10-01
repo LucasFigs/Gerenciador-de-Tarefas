@@ -1,24 +1,16 @@
 {
   "name": "api-tarefas",
-  "version": "1.0.0",
   "type": "module",
-  "description": "API de gerenciamento de tarefas e usuários",
-  "main": "src/app.js",
-  "scripts": {
-    "dev": "nodemon src/app.js",
-    "start": "node src/app.js"
-  },
   "dependencies": {
-    "pg": "^8.11.3",
     "express": "^4.18.2",
+    "mysql2": "^3.6.0",
     "cors": "^2.8.5",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
   },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
-  },
-  "keywords": ["api", "tarefas", "usuarios", "node", "express"],
-  "author": "Marcio Junior, Caua Milfont & Lucas Figueredo",
-  "license": "MIT"
+
+  "scripts": {
+    "start": "node src/app.js",
+    "build": "npm install"
+  }  
 }
