@@ -4,7 +4,7 @@ export async function executarSQL(query, params = []) {
   let conn;
   try {
     conn = await getConnection();
-    const [result] = await conn.query(query, params); // ✅ Passa os parâmetros
+    const [result] = await conn.query(query, params); 
     return result;
   } catch (error) {
     console.error("Erro ao executar SQL:", error);
