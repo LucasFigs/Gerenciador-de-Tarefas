@@ -13,10 +13,8 @@ export async function getConnection() {
     port: process.env.DB_PORT || "26949",
     database: process.env.DB_NAME || "defaultdb",
     ssl: {
-      rejectUnauthorized: false // ✅ MUDAR PARA false para aceitar certificado autoassinado
+      rejectUnauthorized: false // ✅ Necessário para Aiven
     },
-    // Remover opções inválidas para Connection
     connectTimeout: 60000
-    // Remover acquireTimeout e timeout (são para Pool, não Connection)
   });
 }
