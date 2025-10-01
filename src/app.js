@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
 import tarefaRoutes from "./routes/tarefaRoutes.js";
-import swaggerDocs from "./config/swagger.js"; // CORRIGIDO: adicionado "config/"
+import swaggerDocs from "./config/swagger.js";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -16,7 +16,30 @@ app.use("/tarefas", tarefaRoutes);
 
 // Health check
 app.get("/health", (req, res) => {
-  res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
+  res.status(200).json({ 
+    status: "OK", 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// Teste de banco (OPCIONAL - pode remover depois de testar)
+app.get("/test-db", async (req, res) => {
+  try {
+    const { getConnection } = await import("./config/db.js");
+    const conn = await getConnection();
+    const [result] = await conn.query("SELECT 1 as test");
+    await conn.end();
+    res.json({ 
+      status: "✅ Conexão com banco OK",
+      result: result 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: "❌ Erro na conexão com banco",
+      error: error.message 
+    });
+  }
 });
 
 // Documentação Swagger
@@ -31,4 +54,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
   console.log(`📚 Documentação: http://localhost:${PORT}/api-docs`);
+  console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
 });
