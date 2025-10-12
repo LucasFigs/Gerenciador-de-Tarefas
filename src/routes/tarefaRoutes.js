@@ -1,5 +1,6 @@
 import express from "express";
 import { tarefaController } from "../controllers/tarefaController.js";
+import { autenticar } from "../middlewares/auth.js";
 
 const router = express.Router();
 
@@ -7,6 +8,8 @@ const router = express.Router();
  * @swagger
  * /tarefas:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Lista todas as tarefas
  *     tags: [Tarefas]
  *     responses:
@@ -18,13 +21,17 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Tarefa'
+ *       401:
+ *         description: Token de acesso necessário
  */
-router.get("/", tarefaController.listar);
+router.get("/", autenticar, tarefaController.listar);
 
 /**
  * @swagger
  * /tarefas/{id}:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Busca tarefa por ID
  *     tags: [Tarefas]
  *     parameters:
@@ -41,15 +48,19 @@ router.get("/", tarefaController.listar);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Tarefa'
+ *       401:
+ *         description: Token de acesso necessário
  *       404:
  *         description: Tarefa não encontrada
  */
-router.get("/:id", tarefaController.buscarPorId);
+router.get("/:id", autenticar, tarefaController.buscarPorId);
 
 /**
  * @swagger
  * /tarefas/usuario/{id_usuario}:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Lista tarefas por usuário
  *     tags: [Tarefas]
  *     parameters:
@@ -68,15 +79,19 @@ router.get("/:id", tarefaController.buscarPorId);
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Tarefa'
+ *       401:
+ *         description: Token de acesso necessário
  *       404:
  *         description: Nenhuma tarefa encontrada para este usuário
  */
-router.get("/usuario/:id_usuario", tarefaController.listarPorUsuario);
+router.get("/usuario/:id_usuario", autenticar, tarefaController.listarPorUsuario);
 
 /**
  * @swagger
  * /tarefas:
  *   post:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Cria uma nova tarefa
  *     tags: [Tarefas]
  *     requestBody:
@@ -86,17 +101,21 @@ router.get("/usuario/:id_usuario", tarefaController.listarPorUsuario);
  *           schema:
  *             $ref: '#/components/schemas/Tarefa'
  *     responses:
- *       200:
+ *       201:
  *         description: Tarefa cadastrada com sucesso
+ *       401:
+ *         description: Token de acesso necessário
  *       400:
  *         description: Erro ao cadastrar tarefa
  */
-router.post("/", tarefaController.criar);
+router.post("/", autenticar, tarefaController.criar);
 
 /**
  * @swagger
  * /tarefas/{id}:
  *   put:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Atualiza uma tarefa existente
  *     tags: [Tarefas]
  *     parameters:
@@ -115,15 +134,21 @@ router.post("/", tarefaController.criar);
  *     responses:
  *       200:
  *         description: Tarefa atualizada com sucesso
- *       400:
- *         description: Erro ao atualizar tarefa
+ *       401:
+ *         description: Token de acesso necessário
+ *       403:
+ *         description: Você não tem permissão para editar esta tarefa
+ *       404:
+ *         description: Tarefa não encontrada
  */
-router.put("/:id", tarefaController.atualizar);
+router.put("/:id", autenticar, tarefaController.atualizar);
 
 /**
  * @swagger
  * /tarefas/{id}:
  *   delete:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Remove uma tarefa
  *     tags: [Tarefas]
  *     parameters:
@@ -136,9 +161,13 @@ router.put("/:id", tarefaController.atualizar);
  *     responses:
  *       200:
  *         description: Tarefa excluída com sucesso
- *       400:
- *         description: Erro ao excluir tarefa
+ *       401:
+ *         description: Token de acesso necessário
+ *       403:
+ *         description: Você não tem permissão para excluir esta tarefa
+ *       404:
+ *         description: Tarefa não encontrada
  */
-router.delete("/:id", tarefaController.deletar);
+router.delete("/:id", autenticar, tarefaController.deletar);
 
 export default router;

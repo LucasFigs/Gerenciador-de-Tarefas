@@ -1,5 +1,6 @@
 import express from "express";
 import { usuarioController } from "../controllers/usuarioController.js";
+import { autenticar } from "../middlewares/auth.js";
 
 const router = express.Router();
 
@@ -23,10 +24,21 @@ const router = express.Router();
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: integer
- *                 nome:
+ *                 success:
+ *                   type: boolean
+ *                 message:
  *                   type: string
+ *                 token:
+ *                   type: string
+ *                 usuario:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     nome:
+ *                       type: string
+ *                     email:
+ *                       type: string
  *       401:
  *         description: Email ou senha inválidos
  */
@@ -35,7 +47,29 @@ router.post("/login", usuarioController.login);
 /**
  * @swagger
  * /usuarios:
+ *   post:
+ *     summary: Cria um novo usuário
+ *     tags: [Usuários]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Usuario'
+ *     responses:
+ *       201:
+ *         description: Usuário cadastrado com sucesso
+ *       400:
+ *         description: Erro ao cadastrar usuário
+ */
+router.post("/", usuarioController.criar);
+
+/**
+ * @swagger
+ * /usuarios:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Lista todos os usuários
  *     tags: [Usuários]
  *     responses:
@@ -47,13 +81,17 @@ router.post("/login", usuarioController.login);
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Usuario'
+ *       401:
+ *         description: Token de acesso necessário
  */
-router.get("/", usuarioController.listar);
+router.get("/", autenticar, usuarioController.listar);
 
 /**
  * @swagger
  * /usuarios/{id}:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Busca usuário por ID
  *     tags: [Usuários]
  *     parameters:
@@ -70,35 +108,19 @@ router.get("/", usuarioController.listar);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Usuario'
+ *       401:
+ *         description: Token de acesso necessário
  *       404:
  *         description: Usuário não encontrado
  */
-router.get("/:id", usuarioController.buscarPorId);
-
-/**
- * @swagger
- * /usuarios:
- *   post:
- *     summary: Cria um novo usuário
- *     tags: [Usuários]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Usuario'
- *     responses:
- *       200:
- *         description: Usuário cadastrado com sucesso
- *       400:
- *         description: Erro ao cadastrar usuário
- */
-router.post("/", usuarioController.criar);
+router.get("/:id", autenticar, usuarioController.buscarPorId);
 
 /**
  * @swagger
  * /usuarios/{id}:
  *   put:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Atualiza um usuário existente
  *     tags: [Usuários]
  *     parameters:
@@ -117,15 +139,19 @@ router.post("/", usuarioController.criar);
  *     responses:
  *       200:
  *         description: Usuário atualizado com sucesso
- *       400:
- *         description: Erro ao atualizar usuário
+ *       401:
+ *         description: Token de acesso necessário
+ *       404:
+ *         description: Usuário não encontrado
  */
-router.put("/:id", usuarioController.atualizar);
+router.put("/:id", autenticar, usuarioController.atualizar);
 
 /**
  * @swagger
  * /usuarios/{id}:
  *   delete:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Remove um usuário
  *     tags: [Usuários]
  *     parameters:
@@ -138,9 +164,11 @@ router.put("/:id", usuarioController.atualizar);
  *     responses:
  *       200:
  *         description: Usuário deletado com sucesso
- *       400:
- *         description: Erro ao deletar usuário
+ *       401:
+ *         description: Token de acesso necessário
+ *       404:
+ *         description: Usuário não encontrado
  */
-router.delete("/:id", usuarioController.deletar);
+router.delete("/:id", autenticar, usuarioController.deletar);
 
 export default router;
