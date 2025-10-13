@@ -14,7 +14,7 @@ export const usuarioService = {
 
         const usuario = usuarios[0];
         const senhaValida = await bcrypt.compare(senha, usuario.senha);
-        //const senhaValida = (senha === usuario.senha); // Simplificado para demo
+        
         
         if (!senhaValida) {
             throw new Error('Senha incorreta');
@@ -24,7 +24,7 @@ export const usuarioService = {
     },
 
     async listar() {
-        return await executarSQL("SELECT id, nome, email FROM usuarios"); // Não retorna senha
+        return await executarSQL("SELECT id, nome, email FROM usuarios"); 
     },
 
     async buscarPorId(id) {
@@ -36,7 +36,7 @@ export const usuarioService = {
 
     async criar(nome, email, senha) {
         const senhaHash = await bcrypt.hash(senha, 10);
-        //const senhaHash = senha; // Simplificado para demo
+    
         
         return await executarSQL(
             "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)", 
@@ -46,7 +46,7 @@ export const usuarioService = {
 
     async atualizar(id, nome, email, senha) {
         const senhaHash = await bcrypt.hash(senha, 10);
-        // Em produção, use bcrypt para hash da senha
+
         return await executarSQL(
             "UPDATE usuarios SET nome = ?, email = ?, senha = ? WHERE id = ?", 
             [nome, email, senha, id]

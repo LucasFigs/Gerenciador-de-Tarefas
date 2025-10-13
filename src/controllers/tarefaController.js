@@ -62,7 +62,7 @@ export const tarefaController = {
             const result = await tarefaService.criar(
                 req.body.titulo, 
                 req.body.descricao, 
-                idUsuarioLogado // Usa o ID do usuário logado
+                idUsuarioLogado 
             );
             
             if (result.affectedRows > 0) {
@@ -136,7 +136,6 @@ export const tarefaController = {
             const idUsuarioLogado = req.usuario.id;
             const idTarefa = req.params.id;
             
-            // Verificar se a tarefa pertence ao usuário
             const tarefa = await tarefaService.buscarPorId(idTarefa);
             if (tarefa.length === 0) {
                 return res.status(404).json({
